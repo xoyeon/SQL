@@ -43,7 +43,7 @@ and purchased_at < '2020-07-26'
 group by 1
 order by 1) foo;
 
-# 9. 2020년 7월 요일별 Daily Revenue를 구해쥇요. 어느 요일이 Revenue가 가장 높고 낮나요?
+# 9. 2020년 7월 요일별 Daily Revenue를 구해줘요. 어느 요일이 Revenue가 가장 높고 낮나요?
 select date_format(date_at, '%w') as day_order,
         date_format(date_at, '%W') as day_name,
 		avg(revenue)
@@ -81,4 +81,6 @@ where purchased_at >= '2020-07-01'
 and purchased_at < '2020-08-01'
 group by 1,2,3) foo
 group by 1,2
-order by 3 desc
+order by 3 desc;
+
+# 과제 -- 요일 및 시간대 별 Activate User 수 계산해보기
