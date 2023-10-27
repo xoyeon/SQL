@@ -1,42 +1,43 @@
-# 6. 2020년 7월의 평균 DAU를 구해주세요. Active User 수가 증가하는 추세인가요?
--- DAU : Dailiy Activation User
-select avg(users)
-from(
-select date_format(visited_at - interval 9 hour, '%Y-%m-%d') as date_at,
-		count(distinct customer_id) as users
-from fastcampus.tbl_visit
-where visited_at >= '2020-07-01'
-and visited_at < '2020-08-01'
-group by 1
-order by 1)foo;
-
-# 7. 2020년 7월의 평균 WAU를 구해주세요. -- weekly activation users
+SELECT 
+    AVG(users)
+FROM
+    (SELECT 
+        DATE_FORMAT(visited_at - INTERVAL 9 HOUR, '%Y-%m-%d') AS date_at,
+		COUNT(DISTINCT customer_id) AS users
+    FROM
+        fastcampus.tbl_visit
+    WHERE
+        visited_at >= '2020-07-01'
+            AND visited_at < '2020-08-01'
+    GROUP BY 1
+    ORDER BY 1) fooctivation users
 select avg(users)
 from(
 select date_format(visited_at - interval 9 hour, '%Y-%m-%U') as date_at,
-		count(distinct customer_id) as users
+       count(distinct customer_id) as users
 from fastcampus.tbl_visit
 where visited_at >= '2020-07-05'
 and visited_at < '2020-07-26'
 group by 1
 order by 1) foo;
 
-# 8-1. 2020년 7월의 Daily Revenue는 증가하는 추세인가요? 평균 Daily Revenue도 구해주세요.
-select avg(revenue)
-from(
-select date_format(purchased_at - interval 9 hour, '%Y-%m-%d') as date_at,
-		sum(price) as revenue
-from fastcampus.tbl_purchase
-where purchased_at >= '2020-07-05'
-and purchased_at < '2020-08-01'
-group by 1
-order by 1) foo;
-
-# 8-2. 2020년 7월의 평균 Weekly Revenue를 구해주세요.
+SELECT 
+    AVG(revenue)
+FROM
+    (SELECT 
+        DATE_FORMAT(purchased_at - INTERVAL 9 HOUR, '%Y-%m-%d') AS date_at,
+		SUM(price) AS revenue
+    FROM
+        fastcampus.tbl_purchase
+    WHERE
+        purchased_at >= '2020-07-05'
+            AND purchased_at < '2020-08-01'
+    GROUP BY 1
+    ORDER BY 1) foo세요.
 select avg(revenue)
 from(
 select date_format(purchased_at - interval 9 hour, '%Y-%m-%U') as date_at,
-		sum(price) as revenue
+sum(price) as revenue
 from fastcampus.tbl_purchase
 where purchased_at >= '2020-07-05'
 and purchased_at < '2020-07-26'
@@ -44,43 +45,55 @@ group by 1
 order by 1) foo;
 
 # 9. 2020년 7월 요일별 Daily Revenue를 구해줘요. 어느 요일이 Revenue가 가장 높고 낮나요?
-select date_format(date_at, '%w') as day_order,
-        date_format(date_at, '%W') as day_name,
-		avg(revenue)
-from(
-	select date_format(purchased_at - interval 9 hour, '%Y-%m-%d') as date_at,
-			sum(price) as revenue
-	from fastcampus.tbl_purchase
-	where purchased_at >= '2020-07-05'
-	and purchased_at < '2020-08-01'
-	group by 1) foo
-group by 1, 2
-order by 1;
+SELECT 
+    DATE_FORMAT(date_at, '%w') AS day_order,
+    DATE_FORMAT(date_at, '%W') AS day_name,
+    AVG(revenue)
+FROM
+    (SELECT 
+        DATE_FORMAT(purchased_at - INTERVAL 9 HOUR, '%Y-%m-%d') AS date_at,
+		SUM(price) AS revenue
+    FROM
+        fastcampus.tbl_purchase
+    WHERE
+        purchased_at >= '2020-07-05'
+            AND purchased_at < '2020-08-01'
+    GROUP BY 1) foo
+GROUP BY 1 , 2
+ORDER BY 1;
 
 # 10. 2020년 7월 시간대별 시간당 총 Revenue를 구해주세요. 어느 시간대가 Revenue가 가장 높고 낮나요?
-select hour_at, avg(revenue)
-from (
-select date_format(purchased_at - interval 9 hour, '%Y-%m-%d') as date_at,
-		date_format(purchased_at - interval 9 hour, '%H') as hour_at,
-		sum(price) as revenue
-from fastcampus.tbl_purchase
-where purchased_at >= '2020-07-01'
-and purchased_at < '2020-08-01'
-group by 1,2) foo
-group by 1;
+SELECT 
+    hour_at, AVG(revenue)
+FROM
+    (SELECT 
+        DATE_FORMAT(purchased_at - INTERVAL 9 HOUR, '%Y-%m-%d') AS date_at,
+		DATE_FORMAT(purchased_at - INTERVAL 9 HOUR, '%H') AS hour_at,
+		SUM(price) AS revenue
+    FROM
+        fastcampus.tbl_purchase
+    WHERE
+        purchased_at >= '2020-07-01'
+            AND purchased_at < '2020-08-01'
+    GROUP BY 1 , 2) foo
+GROUP BY 1;
 
 # 11. 2020년 7월의 요일 및 시간대별 Revenue를 구해주세요.
-select dayofweek_at, hour_at, avg(revenue)
-from(
-select date_format(purchased_at - interval 9 hour, '%Y-%m-%d') as date_at,
-		date_format(purchased_at - interval 9 hour, '%W') as dayofweek_at,
-        date_format(purchased_at - interval 9 hour, '%H') as hour_at,
-		sum(price) as revenue
-from fastcampus.tbl_purchase
-where purchased_at >= '2020-07-01'
-and purchased_at < '2020-08-01'
-group by 1,2,3) foo
-group by 1,2
-order by 3 desc;
+SELECT 
+    dayofweek_at, hour_at, AVG(revenue)
+FROM
+    (SELECT 
+        DATE_FORMAT(purchased_at - INTERVAL 9 HOUR, '%Y-%m-%d') AS date_at,
+        DATE_FORMAT(purchased_at - INTERVAL 9 HOUR, '%W') AS dayofweek_at,
+        DATE_FORMAT(purchased_at - INTERVAL 9 HOUR, '%H') AS hour_at,
+        SUM(price) AS revenue
+    FROM
+        fastcampus.tbl_purchase
+    WHERE
+        purchased_at >= '2020-07-01'
+            AND purchased_at < '2020-08-01'
+    GROUP BY 1 , 2 , 3) foo
+GROUP BY 1 , 2
+ORDER BY 3 DESC;
 
 # 과제 -- 요일 및 시간대 별 Activate User 수 계산해보기
